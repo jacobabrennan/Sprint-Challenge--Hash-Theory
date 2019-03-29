@@ -52,7 +52,7 @@ A     B     CARRY   SUM
 1     0       0      1
 1     1       1      0
 ```
-This can be represented with boolean algebra like so:
+This can be repres8ented with boolean algebra like so:
 
 * `SUM = A ⊕ B`  (alternate: `A ^ B` or `A xor B`)
 * `CARRY = A ∧ B`  (alternate: `A && B`)
@@ -73,5 +73,5 @@ A     B     C      carry   sum
 1     1     0        1      0
 1     1     1        1      1
 ```
-* SUM = ?
-* CARRY = ?
+* SUM = ((A && B) && C) || (A && !((B && !C) || (C && !B))) || (B && !((A && !C) || (C && !A))) || (C && !((B && !A) || (A && !B)))
+* CARRY = (A && B) || (A && C) || (B && C)
