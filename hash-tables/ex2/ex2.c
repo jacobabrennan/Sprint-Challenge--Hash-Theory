@@ -4,14 +4,33 @@
 #include "hashtable.h"
 #include "ex2.h"
 
+#define NO_LOCATION "NONE"
+
 char **reconstruct_trip(Ticket **tickets, int length)
 {
-  HashTable *ht = create_hash_table(16);
-  char **route = malloc(length * sizeof(char *));
+    HashTable *ht = create_hash_table(16);
+    char **route = malloc(length * sizeof(char *));
 
-  // YOUR CODE HERE
+    // YOUR CODE HERE
+    Ticket *ticket_start;
+    for(int index=0; index < length; index++)
+    {
+        Ticket *ticket_indexed = tickets[index];
+        if(0 == strcmp(NO_LOCATION, ticket_indexed->source))
+        {
+            ticket_start = ticket_indexed;
+            continue;
+        }
+        hash_table_insert(ht, ticket_indexed->source, ticket_indexed->destination);
+    }
+    char *location = ticket_start->destination;
+    for(int index=0; index < length; index++)
+    {
+        route[index] = location;
+        location = hash_table_retrieve(ht, location);
+    }
 
-  return route;
+    return route;
 }
 
 void print_route(char **route, int length)
