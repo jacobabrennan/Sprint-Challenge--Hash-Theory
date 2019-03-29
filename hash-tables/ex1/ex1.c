@@ -5,18 +5,33 @@
 
 Answer *get_indices_of_item_weights(int *weights, int length, int limit)
 {
+    // Allocate memory for hash table, setup default resultant answer pair
     HashTable *ht = create_hash_table(16);
     Answer *result = NULL;
 
-    // YOUR CODE HERE
+    // Iterate on array until an index complements a previously iterated index
     for(int index_test=0; index_test < length; index_test++)
     {
+
+        // Get weight at index and calculate needed complementary weight
         int weight_test = weights[index_test];
         int weight_complement = limit-weight_test;
+
+        // Check for complementary weight in hash table.
+        // If not found, associate needed weight with index
         int index_complement = hash_table_retrieve(ht, weight_test);
-        if(-1 != index_complement)
+        if(-1 == index_complement)
         {
+            hash_table_insert(ht, weight_complement, index_test);
+        }
+
+        // If complementary weight is found,
+        // construct resultant answer pair and stop iterating
+        else
+        {
+            // Allocate memory for resultant answer pair
             result = malloc(sizeof(Answer));
+            // Ensure that larger weight is stored in index_1
             if(weight_test >= weight_complement)
             {
                 result->index_1 = index_test;
@@ -27,11 +42,12 @@ Answer *get_indices_of_item_weights(int *weights, int length, int limit)
                 result->index_1 = index_test;
                 result->index_2 = index_complement;
             }
+            // Stop iterating (answer already found)
             break;
         }
-        hash_table_insert(ht, weight_complement, index_test);
     }
 
+    // Cleanup and return resultant answer pair
     destroy_hash_table(ht);
     return result;
 }

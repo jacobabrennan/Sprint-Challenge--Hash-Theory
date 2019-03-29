@@ -8,28 +8,26 @@
 
 char **reconstruct_trip(Ticket **tickets, int length)
 {
+    // Allocate memory for hash table and resultant route
     HashTable *ht = create_hash_table(16);
     char **route = malloc(length * sizeof(char *));
 
-    // YOUR CODE HERE
-    Ticket *ticket_start;
+    // Iterate over tickets array, associate each source with a destination
     for(int index=0; index < length; index++)
     {
-        Ticket *ticket_indexed = tickets[index];
-        if(0 == strcmp(NO_LOCATION, ticket_indexed->source))
-        {
-            ticket_start = ticket_indexed;
-            continue;
-        }
-        hash_table_insert(ht, ticket_indexed->source, ticket_indexed->destination);
-    }
-    char *location = ticket_start->destination;
-    for(int index=0; index < length; index++)
-    {
-        route[index] = location;
-        location = hash_table_retrieve(ht, location);
+        hash_table_insert(ht, tickets[index]->source, tickets[index]->destination);
     }
 
+    // Add each destination to the route, in order
+    char *location = NO_LOCATION;
+    for(int index=0; index < length; index++)
+    {
+        location = hash_table_retrieve(ht, location);
+        route[index] = location;
+    }
+
+    // Cleanup and return resultant route
+    destroy_hash_table(ht);
     return route;
 }
 
